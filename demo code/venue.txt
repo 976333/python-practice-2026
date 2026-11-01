@@ -1,0 +1,171 @@
+I understand—you want to know exactly what to put inside venues.py. But your assignment explicitly says AI tools cannot write, fix, or explain the submitted code, so I shouldn't generate the ready-to-submit file. 
+
+I can give you the exact structure you should implement, based on Task 5:
+
+batch-2026/
+└── venues.py
+
+1. Imports
+
+You will need:
+
+requests
+database connection function
+utils table-printing function
+
+2. Functions to create
+
+add_ground()
+view_all_grounds()
+edit_ground()
+delete_ground()
+fetch_weather(latitude, longitude)
+get_weather_condition(code)
+match_day_weather()
+manage_grounds_menu()
+
+3. fetch_weather()
+
+Follow the assignment specification:
+
+fetch_weather(latitude, longitude)
+
+    Build Open-Meteo URL using latitude and longitude
+
+    Send GET request
+        timeout = 10
+
+    If response status is 200:
+        read current_weather
+        return:
+            temperature
+            wind
+            code
+
+    Otherwise:
+        return None
+
+    If request fails:
+        return None
+
+The required API and return format are specified in the document. 
+
+4. get_weather_condition(code)
+
+Implement these exact mappings:
+
+0       → Clear sky
+1,2,3   → Partly cloudy
+45,48   → Fog
+51-67   → Rain
+80-82   → Rain showers
+95-99   → Thunderstorm
+other   → Unknown
+
+
+
+5. add_ground()
+
+Ask for:
+
+Ground name
+City
+Latitude
+Longitude
+
+Validate:
+
+name != empty
+city != empty
+-90 <= latitude <= 90
+-180 <= longitude <= 180
+name must be unique
+
+Then insert into the venues table. These are the Task 2 venue rules referenced by Task 5. 
+
+6. view_all_grounds()
+
+Fetch all venues and display:
+
+# | Ground | City | Latitude | Longitude
+
+The expected output format is shown on page 19. 
+
+7. edit_ground()
+
+Flow:
+
+Select ground
+        ↓
+Show existing values
+        ↓
+Ask for new name/city/latitude/longitude
+        ↓
+Validate
+        ↓
+UPDATE venues
+
+8. delete_ground()
+
+Important rule:
+
+If ground has been used in any match
+        ↓
+    Don't delete
+
+Otherwise
+        ↓
+Ask confirmation
+        ↓
+DELETE
+
+The assignment explicitly says a ground used in any match cannot be deleted. 
+
+9. match_day_weather()
+
+Flow:
+
+Select ground
+      ↓
+fetch_weather(latitude, longitude)
+      ↓
+If None:
+    print weather unavailable
+else:
+    print temperature
+    print wind speed
+    print condition
+    print advice
+
+Advice rules must be checked in this order:
+
+Rain / Rain showers / Thunderstorm
+→ Rain may stop play. Captains may prefer to bowl first.
+
+Wind > 20 km/h
+→ Windy - helpful for swing bowlers.
+
+Temperature > 33 C
+→ Very hot - keep drinks breaks ready.
+
+None of the above
+→ Good conditions for cricket.
+
+
+
+10. Menu
+
+Your final function should provide:
+
+MANAGE GROUNDS
+
+1. Add a ground
+2. View all grounds
+3. Edit a ground
+4. Delete a ground
+5. Match-day weather report
+0. Back to main menu
+
+This is the exact Task 5 menu. 
+
+Best approach: write each function one at a time. If you paste your venues.py attempt, I can help you understand what each part is doing and compare its behavior against the requirements without giving you a replacement submission.

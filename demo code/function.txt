@@ -1,0 +1,643 @@
+# Absolutely. Let's understand this **`show_squad()` function step by step**, with special focus on the **lambda function**.
+
+# # ---
+
+# # 1. What is the purpose of `show_squad()`?
+
+# ```python
+# def show_squad(self):
+# ```
+
+# This method is responsible for **displaying the team's complete squad**.
+
+# It does 5 main things:
+
+# ```text
+# Players
+#    ↓
+# Sort by jersey number
+#    ↓
+# Display player details
+#    ↓
+# Count wicket-keepers & bowlers
+#    ↓
+# Check team readiness
+#    ↓
+# Display final status
+# ```
+
+# ---
+
+# # 2. First important part — `sorted()`
+
+# ```python
+# sorted_players = sorted(
+#     self.players,
+#     key=lambda player: player.jersey_number
+# )
+# ```
+
+# This is the most important part you asked about.
+
+# Let's break it down.
+
+# ### What is `self.players`?
+
+# Your Team class has:
+
+# ```python
+# self.players = []
+# ```
+
+# When players are added:
+
+# ```text
+# self.players
+#     ↓
+# [Player1, Player2, Player3, Player4]
+# ```
+
+# For example:
+
+# ```text
+# Player       Jersey
+# Virat          18
+# Rohit          45
+# Bumrah         93
+# Dhoni           7
+# ```
+
+# The list might not be in jersey-number order.
+
+# ---
+
+# # 3. What does `sorted()` do?
+
+# Python's:
+
+# ```python
+# sorted()
+# ```
+
+# takes a collection and returns a **new sorted list**.
+
+# For example:
+
+# ```python
+# numbers = [30, 10, 20]
+
+# result = sorted(numbers)
+# ```
+
+# Result:
+
+# ```text
+# [10, 20, 30]
+# ```
+
+# But your players are objects, not simple numbers.
+
+# So Python needs to know:
+
+# > **"According to what should I sort these players?"**
+
+# That's where `key=` comes in.
+
+# ---
+
+# # 4. What is `key=`?
+
+# You have:
+
+# ```python
+# key=lambda player: player.jersey_number
+# ```
+
+# `key` tells `sorted()`:
+
+# > **Use this value to decide the sorting order.**
+
+# For your code:
+
+# ```python
+# key = player.jersey_number
+# ```
+
+# means:
+
+# > Sort players according to their jersey number.
+
+# ---
+
+# # 5. Now the Lambda Function
+
+# Your lambda is:
+
+# ```python
+# lambda player: player.jersey_number
+# ```
+
+# A lambda is simply a **small anonymous function**.
+
+# The same thing can be written using a normal function:
+
+# ```python
+# def get_jersey_number(player):
+#     return player.jersey_number
+# ```
+
+# Then:
+
+# ```python
+# sorted_players = sorted(
+#     self.players,
+#     key=get_jersey_number
+# )
+# ```
+
+# So these two are equivalent:
+
+# ### Lambda version
+
+# ```python
+# key=lambda player: player.jersey_number
+# ```
+
+# ### Normal function version
+
+# ```python
+# def get_jersey_number(player):
+#     return player.jersey_number
+
+# key=get_jersey_number
+# ```
+
+# The lambda is just a shorter way.
+
+# ---
+
+# # 6. Understand the lambda syntax
+
+# ```python
+# lambda player: player.jersey_number
+# ```
+
+# Think of it as:
+
+# ```text
+# lambda     player       :       player.jersey_number
+#   ↑           ↑                   ↑
+# keyword    parameter            return value
+# ```
+
+# ### `lambda`
+
+# Tells Python:
+
+# > I'm creating a small anonymous function.
+
+# ### `player`
+
+# This is the **parameter**.
+
+# It represents one player object at a time.
+
+# ### `:`
+
+# Separates the parameter from the expression to return.
+
+# ### `player.jersey_number`
+
+# This is the value returned by the lambda.
+
+# ---
+
+# # 7. How does `sorted()` actually use it?
+
+# Suppose your players are:
+
+# ```text
+# Player A → jersey 45
+# Player B → jersey 7
+# Player C → jersey 18
+# ```
+
+# Python effectively does:
+
+# ```text
+# player A → lambda → 45
+# player B → lambda → 7
+# player C → lambda → 18
+# ```
+
+# So `sorted()` sees:
+
+# ```text
+# 45
+# 7
+# 18
+# ```
+
+# Then it sorts those values:
+
+# ```text
+# 7
+# 18
+# 45
+# ```
+
+# Therefore the players become:
+
+# ```text
+# Player B → 7
+# Player C → 18
+# Player A → 45
+# ```
+
+# ### Important:
+
+# The lambda **does not sort anything itself**.
+
+# The lambda only tells `sorted()`:
+
+# > "For each player, use their jersey number as the sorting value."
+
+# ---
+
+# # 8. Why not simply write this?
+
+# You might wonder:
+
+# ```python
+# sorted(self.players)
+# ```
+
+# Why don't we do that?
+
+# Because Python doesn't automatically know how to compare your `Player` objects.
+
+# For example:
+
+# ```text
+# Player object > Player object
+# ```
+
+# Python doesn't know whether you want to compare:
+
+# - name
+# - jersey number
+# - age
+# - role
+# - batting style
+
+# So we explicitly tell it:
+
+# ```python
+# key=lambda player: player.jersey_number
+# ```
+
+# ---
+
+# # 9. What if we wanted to sort by name?
+
+# We could write:
+
+# ```python
+# sorted_players = sorted(
+#     self.players,
+#     key=lambda player: player.name
+# )
+# ```
+
+# Now sorting would happen according to:
+
+# ```text
+# player.name
+# ```
+
+# ---
+
+# # 10. What if we wanted descending jersey number?
+
+# Add:
+
+# ```python
+# reverse=True
+# ```
+
+# ```python
+# sorted_players = sorted(
+#     self.players,
+#     key=lambda player: player.jersey_number,
+#     reverse=True
+# )
+# ```
+
+# Result:
+
+# ```text
+# 93
+# 45
+# 18
+# 7
+# ```
+
+# ---
+
+# # 11. Back to your function
+
+# After sorting:
+
+# ```python
+# print(
+#     f"\nSquad - {self.name} "
+#     f"({self.short_name}), {self.home_city}"
+# )
+# ```
+
+# This prints the team information.
+
+# For example:
+
+# ```text
+# Squad - India (IND), Mumbai
+# ```
+
+# ---
+
+# ### Separator
+
+# ```python
+# print("-" * 60)
+# ```
+
+# `"-" * 60` creates:
+
+# ```text
+# ------------------------------------------------------------
+# ```
+
+# It's only for formatting.
+
+# ---
+
+# ### Table heading
+
+# ```python
+# print(
+#     "No.  Name                 Role             Batting"
+# )
+# ```
+
+# Displays the column headings.
+
+# ---
+
+# # 12. Loop through sorted players
+
+# ```python
+# for player in sorted_players:
+# ```
+
+# This means:
+
+# > Take each player from the sorted list, one by one.
+
+# For example:
+
+# ```text
+# sorted_players
+
+# 7    Dhoni
+# 18   Kohli
+# 45   Rohit
+# 93   Bumrah
+# ```
+
+# The loop processes:
+
+# ```text
+# player = Dhoni
+# player = Kohli
+# player = Rohit
+# player = Bumrah
+# ```
+
+# ---
+
+# # 13. Printing player information
+
+# ```python
+# print(
+#     f"{player.jersey_number:<5}"
+#     f"{player.name:<21}"
+#     f"{player.role:<17}"
+#     f"{player.batting_style}"
+# )
+# ```
+
+# This displays:
+
+# ```text
+# 7    Dhoni                Wicket-keeper    Right-hand
+# 18   Kohli                Batter           Right-hand
+# 45   Rohit                Batter           Right-hand
+# 93   Bumrah               Bowler           Right-hand
+# ```
+
+# The `<5`, `<21`, `<17` are just **fixed-width formatting** to keep columns aligned.
+
+# ---
+
+# # 14. Count wicket-keepers
+
+# ```python
+# wicket_keepers = len(
+#     self.players_by_role("Wicket-keeper")
+# )
+# ```
+
+# First:
+
+# ```python
+# self.players_by_role("Wicket-keeper")
+# ```
+
+# returns something like:
+
+# ```python
+# [Dhoni]
+# ```
+
+# Then:
+
+# ```python
+# len(...)
+# ```
+
+# counts them:
+
+# ```text
+# 1
+# ```
+
+# So:
+
+# ```python
+# wicket_keepers = 1
+# ```
+
+# ---
+
+# # 15. Count bowlers
+
+# ```python
+# bowlers = len(self.bowlers())
+# ```
+
+# Your `bowlers()` method returns all players who can bowl.
+
+# For example:
+
+# ```python
+# [Bumrah, Siraj, Jadeja, Hardik, Kuldeep]
+# ```
+
+# Then:
+
+# ```python
+# len(...)
+# ```
+
+# returns:
+
+# ```text
+# 5
+# ```
+
+# ---
+
+# # 16. Check team readiness
+
+# ```python
+# ready, missing = self.is_ready_to_play()
+# ```
+
+# Your `is_ready_to_play()` returns two values.
+
+# For example:
+
+# ```python
+# (True, [])
+# ```
+
+# Python assigns them:
+
+# ```text
+# ready   = True
+# missing = []
+# ```
+
+# Or:
+
+# ```python
+# (False, ["Needs at least 11 players"])
+# ```
+
+# becomes:
+
+# ```text
+# ready   = False
+# missing = ["Needs at least 11 players"]
+# ```
+
+# ---
+
+# # 17. Determine status
+
+# ```python
+# status = "Ready" if ready else "Not ready"
+# ```
+
+# This is a **conditional expression**.
+
+# It means:
+
+# ```python
+# if ready:
+#     status = "Ready"
+# else:
+#     status = "Not ready"
+# ```
+
+# So if:
+
+# ```python
+# ready = True
+# ```
+
+# then:
+
+# ```text
+# status = "Ready"
+# ```
+
+# Otherwise:
+
+# ```text
+# status = "Not ready"
+# ```
+
+# ---
+
+# # 18. Final output
+
+# ```python
+# print(
+#     f"Players: {len(self.players)} | "
+#     f"Wicket-keepers: {wicket_keepers} | "
+#     f"Can bowl: {bowlers} | "
+#     f"Status: {status}"
+# )
+# ```
+
+# Example:
+
+# ```text
+# Players: 11 | Wicket-keepers: 1 | Can bowl: 5 | Status: Ready
+# ```
+
+# ---
+
+# # ⭐ Most Important Part: Lambda
+
+# Remember this:
+
+# ```python
+# lambda player: player.jersey_number
+# ```
+
+# means:
+
+# > **Take one player and return that player's jersey number.**
+
+# And:
+
+# ```python
+# sorted(
+#     self.players,
+#     key=lambda player: player.jersey_number
+# )
+# ```
+
+# means:
+
+# > **Sort the players according to their jersey numbers.**
+
+# ### One-line interview answer
+
+# If someone asks **"Why did you use lambda here?"**, you can say:
+
+# > **"I used a lambda function as the key for `sorted()` so that the players are sorted based on their jersey number."**
+
+# That's the main reason.
